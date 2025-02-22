@@ -8,28 +8,30 @@
     let isHovered = false;
     let isMuted = true;
 
-    // Function to request fullscreen on iOS and desktop
     function toggleFullscreen() {
         if (videoElement) {
             if (isFullscreen) {
                 // Exit fullscreen
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { // For iOS Safari
+                } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
+                } else if (videoElement.webkitExitFullscreen) { // iOS special case
+                    videoElement.webkitExitFullscreen();
                 }
             } else {
                 // Enter fullscreen
                 if (videoElement.requestFullscreen) {
                     videoElement.requestFullscreen();
-                } else if (videoElement.webkitRequestFullscreen) { // For iOS Safari
+                } else if (videoElement.webkitRequestFullscreen) {
                     videoElement.webkitRequestFullscreen();
+                } else if (videoElement.webkitEnterFullscreen) { // iOS Safari
+                    videoElement.webkitEnterFullscreen();
                 }
             }
         }
     }
 
-    // Unmute video when user clicks
     function unmute() {
         videoElement.muted = false;
         isMuted = false;
@@ -42,7 +44,7 @@
             hls.attachMedia(videoElement);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoElement.muted = true; // Start muted
+                videoElement.muted = true; 
                 setTimeout(() => {
                     videoElement.play().catch(err => console.error("Autoplay failed:", err));
                 }, 500);
@@ -61,13 +63,20 @@
             });
         }
 
-        // Event listener for fullscreen change (both standard and webkit)
         document.addEventListener('fullscreenchange', () => {
             isFullscreen = !!document.fullscreenElement;
         });
 
         document.addEventListener('webkitfullscreenchange', () => {
             isFullscreen = !!document.webkitFullscreenElement;
+        });
+
+        videoElement.addEventListener('webkitbeginfullscreen', () => {
+            isFullscreen = true;
+        });
+
+        videoElement.addEventListener('webkitendfullscreen', () => {
+            isFullscreen = false;
         });
     });
 </script>
@@ -94,7 +103,6 @@
         width: 100%;
         height: auto;
         object-fit: cover;
-        pointer-events: none;
     }
 
     .live-badge {
@@ -129,17 +137,5 @@
 
     .fullscreen-btn:hover {
         background: rgba(0, 0, 0, 0.9);
-    }
-
-    /* Responsive styling */
-    @media (max-width: 600px) {
-        .video-container {
-            max-width: 100%;
-        }
-
-        .fullscreen-btn {
-            font-size: 12px;
-            padding: 6px 10px;
-        }
     }
 </style>
