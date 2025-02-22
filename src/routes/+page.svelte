@@ -8,13 +8,23 @@
     let isHovered = false;
     let isMuted = true;
 
-    // Toggle fullscreen
+    // Toggle fullscreen for desktop and mobile
     function toggleFullscreen() {
         if (videoElement) {
-            if (!isFullscreen) {
-                videoElement.requestFullscreen().catch(err => console.error("Fullscreen error:", err));
+            if (isFullscreen) {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
             } else {
-                document.exitFullscreen();
+                // Enter fullscreen
+                if (videoElement.requestFullscreen) {
+                    videoElement.requestFullscreen();
+                } else if (videoElement.webkitRequestFullscreen) { // For Safari
+                    videoElement.webkitRequestFullscreen();
+                }
             }
         }
     }
@@ -51,8 +61,14 @@
             });
         }
 
+        // Event listener for fullscreen change
         document.addEventListener('fullscreenchange', () => {
             isFullscreen = !!document.fullscreenElement;
+        });
+
+        // Event listener for webkit fullscreen change (Safari)
+        document.addEventListener('webkitfullscreenchange', () => {
+            isFullscreen = !!document.webkitFullscreenElement;
         });
     });
 </script>
