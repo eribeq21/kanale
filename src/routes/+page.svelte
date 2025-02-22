@@ -6,7 +6,9 @@
     let streamURL = "https://spt.securedirect.org/skyatlantic/index.m3u8";
     let isFullscreen = false;
     let isHovered = false;
+    let isMuted = true;
 
+    // Toggle fullscreen
     function toggleFullscreen() {
         if (videoElement) {
             if (!isFullscreen) {
@@ -17,6 +19,12 @@
         }
     }
 
+    // Unmute video when user clicks
+    function unmute() {
+        videoElement.muted = false;
+        isMuted = false;
+    }
+
     onMount(() => {
         const hls = new Hls();
         if (videoElement && Hls.isSupported()) {
@@ -24,11 +32,10 @@
             hls.attachMedia(videoElement);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                // Unmute after the stream starts loading
-                videoElement.muted = false;
+                videoElement.muted = true; // Start muted
                 setTimeout(() => {
                     videoElement.play().catch(err => console.error("Autoplay failed:", err));
-                }, 500); // Delay slightly to ensure the stream is loaded
+                }, 500);
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -37,10 +44,10 @@
         } else if (videoElement?.canPlayType('application/vnd.apple.mpegurl')) {
             videoElement.src = streamURL;
             videoElement.addEventListener('loadedmetadata', () => {
-                videoElement.muted = false; // Ensure it's unmuted
+                videoElement.muted = true;
                 setTimeout(() => {
                     videoElement.play().catch(err => console.error("Autoplay failed:", err));
-                }, 500); // Delay slightly to ensure the stream is loaded
+                }, 500);
             });
         }
 
@@ -50,7 +57,7 @@
     });
 </script>
 
-<div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false}>
+<div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
     <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
     <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
     {#if isHovered && isFullscreen}
@@ -60,98 +67,64 @@
     {/if}
 </div>
 
-
 <style>
-.video-container {  
-    position: relative;  
-    width: 100%;  
-    max-width: 100%;  
-    margin: auto;  
-    overflow: hidden;  
-    border-radius: 10px; /* Rounded corners for a softer look */  
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */  
-    background: rgba(0, 0, 0, 0.8); /* Dark background for contrast */  
-}  
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+    }
 
-video {  
-    width: 100%;  
-    height: auto;  
-    object-fit: cover;  
-    pointer-events: none;  
-    border-radius: 10px; /* Match the container's border radius */  
-}  
+    video {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        pointer-events: none;
+    }
 
-.live-badge {  
-    position: absolute;  
-    top: 10px;  
-    left: 10px;  
-    background: rgba(255, 0, 0, 0.85); /* Slightly more opaque */  
-    color: white;  
-    padding: 8px 12px; /* Increased padding for a better touch target */  
-    font-weight: bold;  
-    font-size: 16px; /* Slightly larger font for visibility */  
-    border-radius: 5px;  
-    opacity: 0;  
-    transition: opacity 0.3s, transform 0.3s; /* Add transform for a smoother effect */  
-}  
+    .live-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: red;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        border-radius: 5px;
+        display: none;
+    }
 
-.live-badge.show-live {  
-    opacity: 1;  
-    transform: scale(1.1); /* Slightly scale up when visible */  
-}  
+    .live-badge.show-live {
+        display: block;
+    }
 
-.fullscreen-btn {  
-    position: absolute;  
-    bottom: 15px;  
-    right: 15px;  
-    background: rgba(0, 0, 0, 0.85); /* Darker button for contrast */  
-    color: white;  
-    border: none;  
-    padding: 10px 15px; /* Increased padding for better touch target */  
-    cursor: pointer;  
-    font-size: 16px; /* Larger font for readability */  
-    border-radius: 5px;  
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */  
-    transition: background 0.3s, transform 0.3s; /* Smooth transition for hover effect */  
-}  
+    .fullscreen-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+    }
 
-.fullscreen-btn:hover {  
-    background: rgba(0, 0, 0, 0.95);  
-    transform: scale(1.05); /* Slightly scale up on hover */  
-}  
+    .fullscreen-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+    }
 
-/* Hover effect */  
-.video-container:hover .live-badge {  
-    opacity: 1;  
-}  
+    /* Responsive styling */
+    @media (max-width: 600px) {
+        .video-container {
+            max-width: 100%;
+        }
 
-/* Mobile styles */  
-@media (max-width: 768px) {  
-    .fullscreen-btn {  
-        font-size: 14px; /* Adjusted for better readability */  
-        padding: 8px 12px; /* Adjusted padding */  
-    }  
-
-    .live-badge {  
-        font-size: 14px; /* Adjusted for better readability */  
-        top: 12px; /* Slightly adjusted position */  
-        left: 12px; /* Slightly adjusted position */  
-        padding: 6px 10px; /* Adjusted padding */  
-    }  
-}  
-
-/* Small mobile devices */  
-@media (max-width: 480px) {  
-    .fullscreen-btn {  
-        font-size: 12px; /* Smaller font for small devices */  
-        padding: 6px 10px; /* Adjusted padding */  
-    }  
-
-    .live-badge {  
-        font-size: 12px; /* Smaller font for small devices */  
-        top: 8px; /* Adjusted position */  
-        left: 8px; /* Adjusted position */  
-        padding: 4px 8px; /* Adjusted padding */  
-    }  
-}
+        .fullscreen-btn {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+    }
 </style>
