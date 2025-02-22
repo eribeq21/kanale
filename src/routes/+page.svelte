@@ -3,7 +3,7 @@
     import Hls from 'hls.js';
 
     let videoElement;
-    let streamURL = "http://spt.securedirect.org/skyatlantic/index.m3u8";
+    let streamURL = "https://spt.securedirect.org/skyatlantic/index.m3u8";
     let isFullscreen = false;
     let isHovered = false;
 
