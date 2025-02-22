@@ -18,25 +18,29 @@
     }
 
     onMount(() => {
+        const hls = new Hls();
         if (videoElement && Hls.isSupported()) {
-            const hls = new Hls();
             hls.loadSource(streamURL);
             hls.attachMedia(videoElement);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoElement.play().catch(err => console.error("Autoplay failed:", err));
-            });
 
-            hls.on(Hls.Events.BUFFER_EOS, () => {
-                videoElement.currentTime = videoElement.duration;
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                // Unmute after the stream starts loading
+                videoElement.muted = false;
+                setTimeout(() => {
+                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
+                }, 500); // Delay slightly to ensure the stream is loaded
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error("HLS error:", data);
+                console.error("HLS.js error:", data);
             });
         } else if (videoElement?.canPlayType('application/vnd.apple.mpegurl')) {
             videoElement.src = streamURL;
             videoElement.addEventListener('loadedmetadata', () => {
-                videoElement.play().catch(err => console.error("Autoplay failed:", err));
+                videoElement.muted = false; // Ensure it's unmuted
+                setTimeout(() => {
+                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
+                }, 500); // Delay slightly to ensure the stream is loaded
             });
         }
 
@@ -55,6 +59,7 @@
         <button class="fullscreen-btn" onclick={toggleFullscreen}>⛶ Fullscreen</button>
     {/if}
 </div>
+
 
 <style>
 .video-container {  
