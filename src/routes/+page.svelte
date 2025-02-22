@@ -1,112 +1,101 @@
-<script>  
-    export let data;  
-    let videos = data.videos || [];  
-    let currentIndex = 0;  
+<script>
+    export let data;
+    let videos = data.videos || [];
+    let currentIndex = 0;
 
-    function nextVideo() {  
-        if (currentIndex < videos.length - 1) {  
-            currentIndex++;  
-        }  
-    }  
+    function nextVideo() {
+        if (currentIndex < videos.length - 1) {
+            currentIndex++;
+        }
+    }
 
-    function prevVideo() {  
-        if (currentIndex > 0) {  
-            currentIndex--;  
-        }  
-    }  
-</script>  
+    function prevVideo() {
+        if (currentIndex > 0) {
+            currentIndex--;
+        }
+    }
+</script>
 
-<style>  
-    :global(body) {  
-        display: flex;  
-        flex-direction: column;  
-        justify-content: center;  
-        align-items: center;  
-        height: 100vh;  
-        margin: 0;  
-        background: linear-gradient(135deg, #788bb0, #2a5298);  
-        text-align: center;  
-        font-family: Arial, sans-serif;  
-        color: white;  
-    }  
+<style>
+    :global(body) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        text-align: center;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
 
-    h1 {  
-        font-size: 2.5rem;  
-        margin-bottom: 15px;  
-        font-weight: bold;  
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);  
-    }  
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
 
-    .video-container {  
-        position: relative;  
-        width: 85%;  
-        max-width: 800px;  
-    }  
+    video {
+        width: 85%;
+        max-width: 800px;
+        border-radius: 15px;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+        background-color: black;
+    }
 
-    video {  
-        width: 100%;  
-        border-radius: 15px;  
-        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);  
-        background-color: black;  
-    }  
+    .controls {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
 
-    .controls {  
-        position: absolute;  
-        top: 50%;  
-        width: 100%;  
-        display: flex;  
-        justify-content: space-between;  
-        transform: translateY(-50%);  
-        opacity: 0;  
-        transition: opacity 0.3s ease;  
-    }  
+    button {
+        font-size: 1.3rem;
+        padding: 10px 20px;
+        border: none;
+        background: linear-gradient(135deg, #ff512f, #dd2476);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
-    .video-container:hover .controls {  
-        opacity: 1;  
-    }  
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    }
 
-    .control-button {  
-        background: rgba(255, 255, 255, 0.7);  
-        border: none;  
-        border-radius: 50%;  
-        width: 40px;  
-        height: 40px;  
-        cursor: pointer;  
-        display: flex;  
-        justify-content: center;  
-        align-items: center;  
-        font-size: 1.5rem;  
-        color: black;  
-        transition: background 0.3s ease;  
-    }  
+    button:disabled {
+        background: #777;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
 
-    .control-button:hover {  
-        background: rgba(255, 255, 255, 1);  
-    }  
+    @media (max-width: 600px) {
+        video {
+            width: 95%;
+            max-width: 350px;
+        }
 
-    button:disabled {  
-        background: #777;  
-        cursor: not-allowed;  
-        box-shadow: none;  
-    }  
+        h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
 
-    @media (max-width: 600px) {  
-        h1 {  
-            font-size: 2rem;  
-        }  
-    }  
-</style>  
+<h1>BexhetiLive</h1>
 
-<h1>BexhetiLive</h1>  
+{#if videos.length > 0}
+    <video src={videos[currentIndex].url} controls></video>
 
-{#if videos.length > 0}  
-    <div class="video-container">  
-        <video src={videos[currentIndex].url} controls autoplay></video>  
-        <div class="controls">  
-            <button class="control-button" on:click={prevVideo} disabled={currentIndex === 0}>&lt;</button>  
-            <button class="control-button" on:click={nextVideo} disabled={currentIndex === videos.length - 1}>&gt;</button>  
-        </div>  
-    </div>  
-{:else}  
-    <p>Loading videos...</p>  
+    <div class="controls">
+        <button on:click={prevVideo} disabled={currentIndex === 0}>&lt; Prev</button>
+        <button on:click={nextVideo} disabled={currentIndex === videos.length - 1}>Next &gt;</button>
+    </div>
+{:else}
+    <p>Loading videos...</p>
 {/if}
