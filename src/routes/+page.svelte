@@ -11,21 +11,19 @@
     function toggleFullscreen() {
         if (videoElement) {
             if (isFullscreen) {
-                // Exit fullscreen
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
-                } else if (videoElement.webkitExitFullscreen) { // iOS special case
+                } else if (videoElement.webkitExitFullscreen) {
                     videoElement.webkitExitFullscreen();
                 }
             } else {
-                // Enter fullscreen
                 if (videoElement.requestFullscreen) {
                     videoElement.requestFullscreen();
                 } else if (videoElement.webkitRequestFullscreen) {
                     videoElement.webkitRequestFullscreen();
-                } else if (videoElement.webkitEnterFullscreen) { // iOS Safari
+                } else if (videoElement.webkitEnterFullscreen) {
                     videoElement.webkitEnterFullscreen();
                 }
             }
@@ -44,7 +42,7 @@
             hls.attachMedia(videoElement);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoElement.muted = true; 
+                videoElement.muted = true;
                 setTimeout(() => {
                     videoElement.play().catch(err => console.error("Autoplay failed:", err));
                 }, 500);
@@ -70,72 +68,106 @@
         document.addEventListener('webkitfullscreenchange', () => {
             isFullscreen = !!document.webkitFullscreenElement;
         });
-
-        videoElement.addEventListener('webkitbeginfullscreen', () => {
-            isFullscreen = true;
-        });
-
-        videoElement.addEventListener('webkitendfullscreen', () => {
-            isFullscreen = false;
-        });
     });
 </script>
 
 <div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
     <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
     <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
-    {#if isHovered && isFullscreen}
-        <button class="fullscreen-btn" onclick={toggleFullscreen}>⛶ Exit Fullscreen</button>
-    {:else}
-        <button class="fullscreen-btn" onclick={toggleFullscreen}>⛶ Fullscreen</button>
-    {/if}
+    <button class="fullscreen-btn" onclick={toggleFullscreen}>{isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}</button>
 </div>
 
 <style>
+    :global(body) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #f0f0f0;
+    }
+
     .video-container {
         position: relative;
         width: 100%;
         max-width: 800px;
         margin: auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        background: #000;
     }
 
     video {
         width: 100%;
         height: auto;
         object-fit: cover;
+        border-radius: 12px;
     }
 
     .live-badge {
         position: absolute;
         top: 10px;
         left: 10px;
-        background: red;
+        background: rgb(161, 83, 83);
         color: white;
-        padding: 5px 10px;
+        padding: 6px 12px;
         font-weight: bold;
         font-size: 14px;
         border-radius: 5px;
         display: none;
     }
 
-    .live-badge.show-live {
+    .show-live {
         display: block;
     }
 
     .fullscreen-btn {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background: rgba(0, 0, 0, 0.7);
+        bottom: 15px;
+        right: 15px;
+        background: rgba(0, 0, 0, 0.6);
         color: white;
         border: none;
-        padding: 8px 12px;
+        padding: 10px 15px;
         cursor: pointer;
         font-size: 14px;
-        border-radius: 5px;
+        border-radius: 8px;
+        transition: background 0.3s;
     }
 
     .fullscreen-btn:hover {
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 600px) {
+        .video-container {
+            max-width: 100%;
+            border-radius: 0;
+        }
+
+        .fullscreen-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .live-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+        }
+    }
+
+    /* Additional Styling for Shadows */
+    .video-container {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .fullscreen-btn {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .fullscreen-btn:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
     }
 </style>
