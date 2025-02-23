@@ -71,6 +71,8 @@
     });
 </script>
 
+<a href="/top_chaneel" class="top-chanel">Kanalet e tjera</a>
+
 <div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
     <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
     <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
@@ -80,38 +82,62 @@
 <style>
     :global(body) {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        background: #f0f0f0;
+        background: #f5f5f5;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .top-chanel {
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+        padding: 15px 20px;
+        background: #ff6f61;
+        border-radius: 0;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .top-chanel:hover {
+        background: #e64a47;
+        transform: scale(1.05);
     }
 
     .video-container {
         position: relative;
         width: 100%;
         max-width: 800px;
-        margin: auto;
+        margin: 20px;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         background: #000;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-container:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
     }
 
     video {
         width: 100%;
         height: auto;
         object-fit: cover;
-        border-radius: 12px;
     }
 
     .live-badge {
         position: absolute;
         top: 10px;
         left: 10px;
-        background: rgb(161, 83, 83);
+        background: red;
         color: white;
-        padding: 6px 12px;
+        padding: 8px 15px;
         font-weight: bold;
         font-size: 14px;
         border-radius: 5px;
@@ -126,48 +152,36 @@
         position: absolute;
         bottom: 15px;
         right: 15px;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.7);
         color: white;
         border: none;
         padding: 10px 15px;
         cursor: pointer;
         font-size: 14px;
         border-radius: 8px;
-        transition: background 0.3s;
+        transition: background 0.3s ease;
     }
 
     .fullscreen-btn:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
     }
 
-    /* Mobile Responsive */
     @media (max-width: 600px) {
+        .top-chanel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 16px;
+            padding: 12px;
+            z-index: 1000;
+        }
+
         .video-container {
+            margin-top: 60px;
             max-width: 100%;
-            border-radius: 0;
+            border-radius: 8px;
         }
-
-        .fullscreen-btn {
-            padding: 8px 12px;
-            font-size: 12px;
-        }
-
-        .live-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-        }
-    }
-
-    /* Additional Styling for Shadows */
-    .video-container {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .fullscreen-btn {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    .fullscreen-btn:hover {
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
     }
 </style>
