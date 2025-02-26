@@ -1,11 +1,11 @@
-import { link } from "$env/static/private";
+import { link } from '$env/static/private';
 
 export async function load() {
 
   let links = link;
 
   return{
-    link : link
+    link : links
   }
   
 }

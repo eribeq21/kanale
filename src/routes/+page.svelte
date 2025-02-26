@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import Hls from 'hls.js';
+    
     let {data} = $props();
    
 
@@ -8,9 +9,9 @@
 
     let videoElement;
     let streamURL = data.link;
-    let isFullscreen = false;
-    let isHovered = false;
-    let isMuted = true;
+    let isFullscreen = $state(false);
+    let isHovered = $state(false);
+    let isMuted = $state(true);
 
     function toggleFullscreen() {
         if (videoElement) {
