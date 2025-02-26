@@ -16,4 +16,6 @@
     background-color: rgba(255, 111, 97, 0.2); /* Light background on hover */  
     color: #d35400; /* Change text color on hover */  
 }
+
+/*Updated by ergit beqiri*/
 </style>
