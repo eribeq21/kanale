@@ -1,9 +1,13 @@
 <script>
     import { onMount } from 'svelte';
     import Hls from 'hls.js';
+    let {data} = $props();
+   
+
+        
 
     let videoElement;
-    let streamURL = "https://spt.securedirect.org/skyatlantic/index.m3u8";
+    let streamURL = data.link;
     let isFullscreen = false;
     let isHovered = false;
     let isMuted = true;
@@ -71,7 +75,7 @@
     });
 </script>
 
-<a href="/top_chaneel" class="top-chanel">Kanalet e tjera</a>
+<a href="/top_chaneel" class="top-chanel">UltraOTT</a>
 
 <div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
     <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
@@ -135,7 +139,7 @@
         position: absolute;
         top: 10px;
         left: 10px;
-        background: red;
+        background: rgb(181, 110, 110);
         color: white;
         padding: 8px 15px;
         font-weight: bold;
