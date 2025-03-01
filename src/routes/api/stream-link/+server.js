@@ -33,6 +33,5 @@ export async function GET({ request }) {
         return json({ error: "Stream link is missing" }, { status: 500 });
     }
 
-    console.log("✅ Returning stream link:", PRIVATE_LINK);
     return json({ link: PRIVATE_LINK });
 }
