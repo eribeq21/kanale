@@ -1,48 +1,38 @@
 <script>
     import { onMount } from 'svelte';
     import Hls from 'hls.js';
-    
-    let {data} = $props();
-   
-
-        
 
     let videoElement;
-    let streamURL = data.link;
-    let isFullscreen = $state(false);
-    let isHovered = $state(false);
-    let isMuted = $state(true);
+    let streamURL = "";
+    let isFullscreen = false;
+    let isHovered = false;
+    let isMuted = true;
+    let hls;
 
-    function toggleFullscreen() {
-        if (videoElement) {
-            if (isFullscreen) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (videoElement.webkitExitFullscreen) {
-                    videoElement.webkitExitFullscreen();
-                }
+    async function fetchStreamLink() {
+        try {
+            const response = await fetch('/api/stream-link');
+            const data = await response.json();
+
+            if (data.link) {
+                streamURL = data.link;
+                console.log("✅ Stream URL:", streamURL);
+                initializeHLS();
             } else {
-                if (videoElement.requestFullscreen) {
-                    videoElement.requestFullscreen();
-                } else if (videoElement.webkitRequestFullscreen) {
-                    videoElement.webkitRequestFullscreen();
-                } else if (videoElement.webkitEnterFullscreen) {
-                    videoElement.webkitEnterFullscreen();
-                }
+                console.error("❌ No valid stream link received.");
             }
+        } catch (error) {
+            console.error("❌ Failed to fetch stream link:", error);
         }
     }
 
-    function unmute() {
-        videoElement.muted = false;
-        isMuted = false;
-    }
+    function initializeHLS() {
+        if (!streamURL || !videoElement) return;
 
-    onMount(() => {
-        const hls = new Hls();
-        if (videoElement && Hls.isSupported()) {
+        if (hls) hls.destroy();
+
+        if (Hls.isSupported()) {
+            hls = new Hls();
             hls.loadSource(streamURL);
             hls.attachMedia(videoElement);
 
@@ -54,9 +44,9 @@
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error("HLS.js error:", data);
+                console.error("❌ HLS.js error:", data);
             });
-        } else if (videoElement?.canPlayType('application/vnd.apple.mpegurl')) {
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
             videoElement.src = streamURL;
             videoElement.addEventListener('loadedmetadata', () => {
                 videoElement.muted = true;
@@ -64,7 +54,13 @@
                     videoElement.play().catch(err => console.error("Autoplay failed:", err));
                 }, 500);
             });
+        } else {
+            console.error("❌ HLS is not supported.");
         }
+    }
+
+    onMount(() => {
+        fetchStreamLink();
 
         document.addEventListener('fullscreenchange', () => {
             isFullscreen = !!document.fullscreenElement;
@@ -74,12 +70,29 @@
             isFullscreen = !!document.webkitFullscreenElement;
         });
     });
+
+    function toggleFullscreen() {
+        if (videoElement) {
+            if (isFullscreen) {
+                document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+            } else {
+                videoElement.requestFullscreen?.() || videoElement.webkitRequestFullscreen?.();
+            }
+        }
+    }
+
+    function unmute() {
+        if (videoElement) {
+            videoElement.muted = false;
+            isMuted = false;
+        }
+    }
 </script>
 
 <a href="/top_chaneel" class="top-chanel">UltraOTT</a>
 
-<div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
-    <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
+<div class="video-container"  onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
+    <video bind:this={videoElement} autoplay  playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
     <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
     <button class="fullscreen-btn" onclick={toggleFullscreen}>{isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}</button>
 </div>
@@ -104,7 +117,6 @@
         text-decoration: none;
         padding: 15px 20px;
         background: #ff6f61;
-        border-radius: 0;
         transition: background 0.3s ease, transform 0.2s ease;
     }
 
@@ -169,24 +181,5 @@
 
     .fullscreen-btn:hover {
         background: rgba(0, 0, 0, 0.9);
-    }
-
-    @media (max-width: 600px) {
-        .top-chanel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 16px;
-            padding: 12px;
-            z-index: 1000;
-        }
-
-        .video-container {
-            margin-top: 60px;
-            max-width: 100%;
-            border-radius: 8px;
-        }
     }
 </style>

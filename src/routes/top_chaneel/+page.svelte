@@ -1,21 +1,32 @@
+<script>
+    import { onMount } from 'svelte';
 
-<a href="/" class="top-chanel">Top Chanel</a>
+    let message = "Welcome to Top Chanel!";
+
+    onMount(() => {
+        console.log("Top Chanel page loaded.");
+    });
+</script>
+
+<h1>{message}</h1>
+
+<a href="/">Back to Home</a>
 
 <style>
-.top-chanel {  
-    text-decoration: none; /* Remove underline */  
-    color: #ff6f61; /* A trendy color for the text */  
-    font-weight: bold; /* Make the text stand out */  
-    font-size: 20px; /* Increase font size */  
-    padding: 10px 15px; /* Add some padding for better clickability */  
-    border-radius: 5px; /* Softens the corners */  
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */  
-}  
-
-.top-chanel:hover {  
-    background-color: rgba(255, 111, 97, 0.2); /* Light background on hover */  
-    color: #d35400; /* Change text color on hover */  
-}
-
-/*Updated by ergit beqiri*/
+    h1 {
+        color: #ff6f61;
+        text-align: center;
+        margin-top: 50px;
+    }
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
 </style>
