@@ -8,26 +8,8 @@
     });
 </script>
 
-<h1>{message}</h1>
+<h1 class="text-3xl text-center text-red-500 mt-12">{message}</h1>
 
-<a href="/">Back to Home</a>
-
-<style>
-    h1 {
-        color: #ff6f61;
-        text-align: center;
-        margin-top: 50px;
-    }
-    a {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        font-size: 18px;
-        color: #007bff;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-        color:#ff6f61
-    }
-</style>
+<a href="/" class="block text-center mt-5 text-lg text-blue-500 hover:underline hover:text-red-500">
+    Back to Home
+</a>
