@@ -92,7 +92,7 @@
 </script>
 
 
-<a href="/">Back to Home</a>
+<a href="/">Back to the  Home</a>
 
 <style>
     h1 {
