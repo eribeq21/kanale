@@ -28,5 +28,6 @@
     }
     a:hover {
         text-decoration: underline;
+        color:#ff6f61
     }
 </style>
