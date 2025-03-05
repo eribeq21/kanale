@@ -1,8 +1,6 @@
 <script>
     import { onMount } from 'svelte';
     import Hls from 'hls.js';
-    
-    
 
     let videoElement;
     let streamURL = "";
@@ -16,9 +14,11 @@
             const response = await fetch('/api/stream-link');
             const data = await response.json();
 
+            console.log("🚀 API Response:", data); // Debugging
+
             if (data.link) {
                 streamURL = data.link;
-                console.log("✅ Stream URL:", streamURL);
+                console.log("✅ Valid Stream URL:", streamURL);
                 initializeHLS();
             } else {
                 console.error("❌ No valid stream link received.");
@@ -91,25 +91,33 @@
     }
 </script>
 
+<a href="/"
+    class="block w-full text-center text-xl font-extrabold text-white py-4 bg-gradient-to-r from-purple-700 to-indigo-900 shadow-lg transition hover:scale-105 hover:shadow-xl">
+    🚀 UltraOTT
+</a>
 
-<a href="/">Back to the  Home</a>
+<div role="region" aria-label="Video container" 
+     class="relative w-full max-w-4xl mx-auto mt-8 rounded-xl overflow-hidden shadow-2xl bg-black group" 
+     on:mouseenter={() => isHovered = true} 
+     on:mouseleave={() => isHovered = false}>
 
-<style>
-    h1 {
-        color: #ff6f61;
-        text-align: center;
-        margin-top: 50px;
-    }
-    a {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        font-size: 18px;
-        color: #007bff;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-        color:#ff6f61
-    }
-</style>
+    <video bind:this={videoElement} autoplay playsinline>
+        <track kind="captions" src="/captions.vtt" srclang="en" label="English">
+    </video>
+
+    <button type="button" on:click={unmute} on:keydown={(e) => e.key === 'Enter' && unmute()} 
+        class="absolute inset-0 w-full h-full bg-transparent">
+    </button>
+
+    <div class="absolute top-4 left-4 bg-red-600 text-white px-4 py-2 text-sm font-bold rounded-lg shadow-lg 
+                transition-opacity duration-300 backdrop-blur-md bg-opacity-80" 
+        class:opacity-100={isHovered} class:opacity-0={!isHovered}>
+        LIVE 🔴
+    </div>
+
+    <button class="absolute bottom-4 right-4 bg-gradient-to-r from-indigo-700 to-purple-900 text-white px-5 py-2 text-sm font-semibold rounded-lg 
+                   shadow-md transition transform hover:scale-110 hover:shadow-xl active:scale-95"
+        on:click={toggleFullscreen}>
+        {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
+    </button>
+</div>

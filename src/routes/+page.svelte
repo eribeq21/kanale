@@ -21,7 +21,7 @@
 
 <div class="min-h-screen bg-gray-900 text-white w-full font-sans">
     <!-- Hero Section -->
-    <div class="relative w-full h-[400px] bg-cover bg-center flex items-center justify-center shadow-lg overflow-hidden" style="background-image: url('/your-hero-image.jpg');">
+    <div class="relative w-full h-[400px] bg-cover bg-center flex items-center justify-center shadow-lg overflow-hidden">
         <!-- Animated Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 animate-gradient-x"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30"></div>
@@ -36,7 +36,7 @@
                 <a href= "/top_chaneel" 
                    class="relative group overflow-hidden rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                     <!-- Channel Thumbnail -->
-                    <div class="w-full h-56 bg-cover bg-center rounded-2xl" style="background-image: url('/thumbnails/{channel.toLowerCase().replace(/\s+/g, '_')}.jpg');"></div>
+                    <div class="w-full h-56 bg-cover bg-center rounded-2xl"></div>
                     <!-- Overlay with Text -->
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-100 transition-opacity duration-300 group-hover:bg-opacity-60">
                         <h3 class="text-lg font-semibold text-white text-center z-10 transform transition-all duration-300 group-hover:scale-110">{channel}</h3>
