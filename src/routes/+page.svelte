@@ -1,6 +1,11 @@
 <script>
     import { onMount } from 'svelte';
     import Hls from 'hls.js';
+    
+    let {data} = $props();
+   
+
+        
 
     let videoElement;
     let streamURL = "";
