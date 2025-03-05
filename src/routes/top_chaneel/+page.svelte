@@ -1,33 +1,192 @@
 <script>
     import { onMount } from 'svelte';
+    import Hls from 'hls.js';
+    
+    let { data } = $props();
 
-    let message = "Welcome to Top Chanel!";
+    let videoElement;
+    let streamURL = "";
+    let isFullscreen = false;
+    let isHovered = false;
+    let isMuted = true;
+    let hls;
+
+    async function fetchStreamLink() {
+        try {
+            const response = await fetch('/api/stream-link');
+            const data = await response.json();
+
+            if (data.link) {
+                streamURL = data.link;
+                console.log("✅ Stream URL:", streamURL);
+                initializeHLS();
+            } else {
+                console.error("❌ No valid stream link received.");
+            }
+        } catch (error) {
+            console.error("❌ Failed to fetch stream link:", error);
+        }
+    }
+
+    function initializeHLS() {
+        if (!streamURL || !videoElement) return;
+
+        if (hls) hls.destroy();
+
+        if (Hls.isSupported()) {
+            hls = new Hls();
+            hls.loadSource(streamURL);
+            hls.attachMedia(videoElement);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                videoElement.muted = true;
+                setTimeout(() => {
+                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
+                }, 500);
+            });
+
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                console.error("❌ HLS.js error:", data);
+            });
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            videoElement.src = streamURL;
+            videoElement.addEventListener('loadedmetadata', () => {
+                videoElement.muted = true;
+                setTimeout(() => {
+                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
+                }, 500);
+            });
+        } else {
+            console.error("❌ HLS is not supported.");
+        }
+    }
 
     onMount(() => {
-        console.log("Top Chanel page loaded.");
+        fetchStreamLink();
+
+        document.addEventListener('fullscreenchange', () => {
+            isFullscreen = !!document.fullscreenElement;
+        });
+
+        document.addEventListener('webkitfullscreenchange', () => {
+            isFullscreen = !!document.webkitFullscreenElement;
+        });
     });
+
+    function toggleFullscreen() {
+        if (videoElement) {
+            if (isFullscreen) {
+                document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+            } else {
+                videoElement.requestFullscreen?.() || videoElement.webkitRequestFullscreen?.();
+            }
+        }
+    }
+
+    function unmute() {
+        if (videoElement) {
+            videoElement.muted = false;
+            isMuted = false;
+        }
+    }
 </script>
 
-<h1>{message}</h1>
+<a href="/top_channel" class="top-chanel">UltraOTT</a>
 
-<a href="/">Back to Home</a>
+<div class="video-container" onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
+    <video bind:this={videoElement} autoplay playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
+    <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
+    <button class="fullscreen-btn" onclick={toggleFullscreen}>{isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}</button>
+</div>
 
 <style>
-    h1 {
-        color: #ff6f61;
-        text-align: center;
-        margin-top: 50px;
+    :global(body) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(to bottom, #1a1a1a, #0d0d0d);
+        font-family: 'Inter', sans-serif;
+        color: white;
     }
-    a {
-        display: block;
+
+    .top-chanel {
+        width: 100%;
         text-align: center;
-        margin-top: 20px;
-        font-size: 18px;
-        color: #007bff;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
         text-decoration: none;
+        padding: 15px 20px;
+        background: linear-gradient(to right, #6d28d9, #4c1d95);
+        transition: background 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
-    a:hover {
-        text-decoration: underline;
-        color:#ff6f61
+
+    .top-chanel:hover {
+        background: linear-gradient(to right, #7c3aed, #5b21b6);
+        transform: scale(1.05);
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 20px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        background: #000;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-container:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .live-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(to right, #ef4444, #dc2626);
+        color: white;
+        padding: 8px 15px;
+        font-weight: bold;
+        font-size: 14px;
+        border-radius: 5px;
+        display: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .show-live {
+        display: block;
+    }
+
+    .fullscreen-btn {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: linear-gradient(to right, #6d28d9, #4c1d95);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 8px;
+        transition: background 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .fullscreen-btn:hover {
+        background: linear-gradient(to right, #7c3aed, #5b21b6);
+        transform: scale(1.05);
     }
 </style>
