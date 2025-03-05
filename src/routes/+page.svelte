@@ -1,185 +1,62 @@
 <script>
     import { onMount } from 'svelte';
-    import Hls from 'hls.js';
+    import "../app.css";
 
-    let videoElement;
-    let streamURL = "";
-    let isFullscreen = false;
-    let isHovered = false;
-    let isMuted = true;
-    let hls;
-
-    async function fetchStreamLink() {
-        try {
-            const response = await fetch('/api/stream-link');
-            const data = await response.json();
-
-            if (data.link) {
-                streamURL = data.link;
-                console.log("✅ Stream URL:", streamURL);
-                initializeHLS();
-            } else {
-                console.error("❌ No valid stream link received.");
-            }
-        } catch (error) {
-            console.error("❌ Failed to fetch stream link:", error);
-        }
-    }
-
-    function initializeHLS() {
-        if (!streamURL || !videoElement) return;
-
-        if (hls) hls.destroy();
-
-        if (Hls.isSupported()) {
-            hls = new Hls();
-            hls.loadSource(streamURL);
-            hls.attachMedia(videoElement);
-
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoElement.muted = true;
-                setTimeout(() => {
-                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
-                }, 500);
-            });
-
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error("❌ HLS.js error:", data);
-            });
-        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-            videoElement.src = streamURL;
-            videoElement.addEventListener('loadedmetadata', () => {
-                videoElement.muted = true;
-                setTimeout(() => {
-                    videoElement.play().catch(err => console.error("Autoplay failed:", err));
-                }, 500);
-            });
-        } else {
-            console.error("❌ HLS is not supported.");
-        }
-    }
+    let channels = [
+        "Top Channel", "Filma Aksion", "Filma Drame", "Filma Fantastik", "Comedy Club", "Horror Nights",
+        "Sci-Fi World", "Classic Movies", "Kids Zone", "Documentaries", "Reality Shows", "Sports Hub",
+        "Music Vibes", "Travel & Adventure", "Anime Kingdom", "Crime & Mystery", "Romantic Hits", "Bollywood Fever",
+        "Hollywood Hits", "War & History", "Short Films", "Stand-up Comedy", "Cooking Shows", "Tech & Science",
+        "Wildlife & Nature", "Fashion & Lifestyle", "Gamer's Paradise", "E-Sports Arena", "K-Drama Universe",
+        "Turkish Series", "Spanish Telenovelas", "Indie Films", "Festival Movies", "Black & White Classics",
+        "Superhero Zone", "Thriller Time", "Fantasy World", "Biographies & Legends", "Talk Shows", "Daily News",
+        "Fitness & Yoga", "Motivational Talks", "DIY & Craft", "Business & Finance", "Paranormal & Myths",
+        "Space & Astronomy", "History Uncovered", "Art & Culture", "Live Concerts", "Celebrity Gossip"
+    ];
 
     onMount(() => {
-        fetchStreamLink();
-
-        document.addEventListener('fullscreenchange', () => {
-            isFullscreen = !!document.fullscreenElement;
-        });
-
-        document.addEventListener('webkitfullscreenchange', () => {
-            isFullscreen = !!document.webkitFullscreenElement;
-        });
+        console.log("UltraOTT page loaded.");
     });
-
-    function toggleFullscreen() {
-        if (videoElement) {
-            if (isFullscreen) {
-                document.exitFullscreen?.() || document.webkitExitFullscreen?.();
-            } else {
-                videoElement.requestFullscreen?.() || videoElement.webkitRequestFullscreen?.();
-            }
-        }
-    }
-
-    function unmute() {
-        if (videoElement) {
-            videoElement.muted = false;
-            isMuted = false;
-        }
-    }
 </script>
 
-<a href="/top_chaneel" class="top-chanel">UltraOTT</a>
+<div class="min-h-screen bg-gray-900 text-white w-full font-sans">
+    <!-- Hero Section -->
+    <div class="relative w-full h-[400px] bg-cover bg-center flex items-center justify-center shadow-lg overflow-hidden" style="background-image: url('/your-hero-image.jpg');">
+        <!-- Animated Gradient Background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 animate-gradient-x"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30"></div>
+        <h1 class="relative z-10 text-5xl font-extrabold uppercase tracking-wider drop-shadow-lg text-white">Welcome to UltraOTT!</h1>
+    </div>
 
-<div class="video-container"  onmouseenter={() => isHovered = true} onmouseleave={() => isHovered = false} onclick={unmute}>
-    <video bind:this={videoElement} autoplay  playsinline disablePictureInPicture oncontextmenu={(e) => e.preventDefault()}></video>
-    <div class="live-badge" class:show-live={isHovered}>LIVE 🔴</div>
-    <button class="fullscreen-btn" onclick={toggleFullscreen}>{isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}</button>
+    <!-- Channel Categories -->
+    <div class="px-8 py-20 max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center text-white tracking-wide">Explore Channels</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {#each channels as channel}
+                <a href= "/top_chaneel" 
+                   class="relative group overflow-hidden rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                    <!-- Channel Thumbnail -->
+                    <div class="w-full h-56 bg-cover bg-center rounded-2xl" style="background-image: url('/thumbnails/{channel.toLowerCase().replace(/\s+/g, '_')}.jpg');"></div>
+                    <!-- Overlay with Text -->
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-100 transition-opacity duration-300 group-hover:bg-opacity-60">
+                        <h3 class="text-lg font-semibold text-white text-center z-10 transform transition-all duration-300 group-hover:scale-110">{channel}</h3>
+                    </div>
+                </a>
+            {/each}
+        </div>
+    </div>
 </div>
 
 <style>
-    :global(body) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        background: #f5f5f5;
-        font-family: 'Arial', sans-serif;
+    /* Add a custom animation for the gradient background */
+    @keyframes gradient-x {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
-    .top-chanel {
-        width: 100%;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        color: white;
-        text-decoration: none;
-        padding: 15px 20px;
-        background: #ff6f61;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    .top-chanel:hover {
-        background: #e64a47;
-        transform: scale(1.05);
-    }
-
-    .video-container {
-        position: relative;
-        width: 100%;
-        max-width: 800px;
-        margin: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        background: #000;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .video-container:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    video {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
-
-    .live-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: rgb(181, 110, 110);
-        color: white;
-        padding: 8px 15px;
-        font-weight: bold;
-        font-size: 14px;
-        border-radius: 5px;
-        display: none;
-    }
-
-    .show-live {
-        display: block;
-    }
-
-    .fullscreen-btn {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    .fullscreen-btn:hover {
-        background: rgba(0, 0, 0, 0.9);
+    .animate-gradient-x {
+        background-size: 200% 200%;
+        animation: gradient-x 10s ease infinite;
     }
 </style>
