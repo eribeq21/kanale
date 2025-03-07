@@ -1,5 +1,16 @@
+<!-- src/routes/+layout.svelte -->
 <script>
-    let { children } = $props();
-    import "../app.css";
+    import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
+    import '../app.css';
+  
+    // Redirect to the login page on load (client-side)
+    onMount(() => {
+      goto('/login');
+    });
   </script>
-  {@render children()}
+  
+  
+  <!-- Render children here, as part of the layout -->
+  <slot />
+  
