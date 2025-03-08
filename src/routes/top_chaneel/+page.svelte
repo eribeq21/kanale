@@ -116,8 +116,9 @@
     </div>
 
     <button class="absolute bottom-4 right-4 bg-gradient-to-r from-indigo-700 to-purple-900 text-white px-5 py-2 text-sm font-semibold rounded-lg 
-                   shadow-md transition transform hover:scale-110 hover:shadow-xl active:scale-95"
-        onclick={toggleFullscreen}>
-        {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
-    </button>
+    shadow-md transition transform hover:scale-110 hover:shadow-xl active:scale-95 z-50"
+onclick={toggleFullscreen}
+ontouchstart={toggleFullscreen}>
+{isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
+</button>
 </div>
