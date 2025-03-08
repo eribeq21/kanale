@@ -32,4 +32,7 @@
 		flex-direction: column;
 		gap: 10px;
 	}
+  button:hover{
+    cursor: pointer;
+  }
 </style>

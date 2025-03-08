@@ -11,13 +11,13 @@ export const actions = {
 
 		if (token) {
 			cookies.set('session', token, {
-				path: '/',  // ✅ Required
+				path: '/',  //  Required
 				maxAge: 60 * 60 * 24 * 7, 
 				httpOnly: true,
 				sameSite: 'strict'
 			});
 
-			// ✅ Correct way to redirect in SvelteKit
+			//  Correct way to redirect in SvelteKit
 			throw redirect(302, '/');
 		}
 
