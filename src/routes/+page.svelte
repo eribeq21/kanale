@@ -3,10 +3,10 @@
     import "../app.css";
 
     let channels = [
-        "Top Channel", "Filma Aksion", "Filma Drame", "Filma Fantastik", "Comedy Club", "Horror Nights",
-        "Sci-Fi World", "Classic Movies", "Kids Zone"
+        "KOMBËTARE", "RTSH TANI", "SPORT", "FILMA", "VOD", "DOKUMENTARË",
+        "FËMJË", "MUZIKË", "LOKALE", "WORLD TV", "CRAZY TV", "RADIO FM",
+        "MP3 SHQIP", "PORTALE", "INFO"
     ];
-
     onMount(() => {
         console.log("UltraOTT page loaded.");
     });
@@ -22,22 +22,22 @@
     </div>
 </div>
 
-    <!-- Channel Categories -->
-    <div class="py-12 px-4 md:px-6 w-full max-w-6xl">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-8 md:mb-10">Explore Channels</h2>
-        <div class="grid grid-cols-3 gap-4 md:grid-cols-3 md:gap-8">
-            {#each channels as channel}
-                <div class="relative group bg-gradient-to-br from-indigo-600 via-purple-500 to-pink-500 rounded-3xl overflow-hidden shadow-xl transition-transform transform hover:scale-105 flex items-center justify-center p-4 aspect-square border border-white/20">
-                    <!-- Category Name -->
-                    <div class="w-full h-full flex items-center justify-center bg-black/40 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-0">
-                        <h3 class="text-base md:text-2xl font-semibold text-white tracking-wide text-center">{channel}</h3>
-                    </div>
-                    <!-- Watch Now Button -->
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-90 flex items-center justify-center transition-opacity duration-300">
-                        <a href="/top_chaneel" class="bg-pink-500 px-4 py-2 md:px-6 md:py-3 rounded-full text-white font-semibold hover:bg-pink-600 shadow-lg">Watch Now</a>
-                    </div>
+    
+<!-- Channel Categories -->
+<div class="py-12 px-4 md:px-6 w-full max-w-6xl">
+    <div class="grid grid-cols-3 gap-2 md:gap-8">
+        {#each channels as channel}
+            <div class="relative group bg-gradient-to-br from-indigo-600 via-purple-500 to-pink-500 rounded-3xl overflow-hidden shadow-xl transition-transform transform hover:scale-105 flex items-center justify-center p-2 md:p-4 aspect-square rounded-2xl">
+                <!-- Category Name -->
+                <div class="w-full h-full flex items-center justify-center bg-black/40 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-0">
+                    <h3 class="text-sm md:text-2xl font-semibold text-white tracking-wide text-center">{channel}</h3>
                 </div>
-            {/each}
-        </div>
+                <!-- Watch Now Button -->
+                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-90 flex items-center justify-center transition-opacity duration-300">
+                    <a href="/top_chaneel" class="bg-pink-500 px-2 py-1 md:px-6 md:py-3 rounded-full text-white font-semibold hover:bg-pink-600 shadow-lg">Watch Now</a>
+                </div>
+            </div>
+        {/each}
     </div>
+</div>
 </div>
