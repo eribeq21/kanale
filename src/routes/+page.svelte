@@ -34,7 +34,7 @@
                     </div>
                     <!-- Watch Now Button -->
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-90 flex items-center justify-center transition-opacity duration-300">
-                        <a href="/top_channel" class="bg-pink-500 px-4 py-2 md:px-6 md:py-3 rounded-full text-white font-semibold hover:bg-pink-600 shadow-lg">Watch Now</a>
+                        <a href="/top_chaneel" class="bg-pink-500 px-4 py-2 md:px-6 md:py-3 rounded-full text-white font-semibold hover:bg-pink-600 shadow-lg">Watch Now</a>
                     </div>
                 </div>
             {/each}

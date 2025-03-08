@@ -1,28 +1,32 @@
 import { createConnection } from '$lib/db/mysql';
 
 export const handle = async ({ event, resolve }) => {
-	// get cookies from browser
+	// Get session token from cookies
 	const session = event.cookies.get('session');
 
 	if (!session) {
-		// if there is no session load page as normal
+		// No session, load page normally
 		return await resolve(event);
 	}
 
-	// find the user based on the session
+	// Find the user based on the session token
 	const db = await createConnection();
 	const [users] = await db.execute('SELECT * FROM users WHERE session_token = ?', [session]);
+
 	if (users.length === 0) {
-		// if no user is found remove the session cookie
+		// No user found? Delete session
 		event.cookies.set('session', '', {
+			path: '/',  // ✅ Required
 			maxAge: -1
 		});
 		return await resolve(event);
 	}
 
-	// if `user` exists set `events.local`
+	// ✅ Store user in event.locals
 	event.locals.user = users[0];
 
-	// load page as normal
-	return await resolve(event);
+	// ✅ Ensure cookie is always set
+	const response = await resolve(event);
+	response.headers.set('set-cookie', `session=${session}; Path=/; HttpOnly; SameSite=Strict`);
+	return response;
 };

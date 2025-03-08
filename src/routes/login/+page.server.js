@@ -11,17 +11,19 @@ export const actions = {
 
 		if (token) {
 			cookies.set('session', token, {
-				maxAge: 60 * 60 * 24 * 7,
-				path: '/',
+				path: '/',  // ✅ Required
+				maxAge: 60 * 60 * 24 * 7, 
 				httpOnly: true,
 				sameSite: 'strict'
 			});
-			redirect(302, '/');
-		} else {
-			return {
-				success: false,
-				message: 'Login failed'
-			};
+
+			// ✅ Correct way to redirect in SvelteKit
+			throw redirect(302, '/');
 		}
+
+		return {
+			success: false,
+			message: 'Login failed'
+		};
 	}
 };

@@ -1,16 +1,15 @@
-<!-- src/routes/+layout.svelte -->
 <script>
-    import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
-    import '../app.css';
-  
-    // Redirect to the login page on load (client-side)
-    onMount(() => {
-      goto('/login');
-    });
-  </script>
-  
-  
-  <!-- Render children here, as part of the layout -->
-  <slot />
-  
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
+
+  onMount(() => {
+      if (browser) {
+          const sessionExists = document.cookie.includes('session=');
+          if (!sessionExists) {
+              goto('/login');
+          }
+      }
+  });
+</script>
+<slot/>

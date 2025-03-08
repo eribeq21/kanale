@@ -17,7 +17,7 @@
 			<!-- Email Input -->
 			<div>
 				<label for="email" class="block text-gray-600 text-sm md:text-base">E-Mail</label>
-				<input type="text" id="email" name="email" required class="w-full border border-gray-300 rounded-md py-3 px-4 text-sm focus:outline-none focus:border-blue-500" autocomplete="off" />
+				<input type="email" id="email" name="email" required class="w-full border border-gray-300 rounded-md py-3 px-4 text-sm focus:outline-none focus:border-blue-500" autocomplete="off" />
 			</div>
 			<!-- Password Input -->
 			<div>
@@ -36,7 +36,7 @@
 			<!-- Login Button -->
 			<button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-3 px-6 w-full text-lg md:text-xl">Login</button>
 			<!-- Warning Message -->
-			{#if form}
+			{#if form && !form.success}
 				<Warning message={form.message} />
 			{/if}
 		</form>
