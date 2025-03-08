@@ -23,11 +23,31 @@
 
     <!-- Channel Categories -->
     <div class="mt-6">
-        <div class="grid grid-cols-3 gap-1 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div class="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-4">
             {#each channels as channel}
-            <div class="bg-gray-800 p-2 sm:p-4 rounded-lg shadow-md flex flex-col items-center">
-                <h3 class="text-xs sm:text-lg font-semibold mb-1 sm:mb-2">{channel}</h3>
-            </div>
+                {#if channel === "KOMBËTARE"}
+                    <!-- Mobile View (Quadratic Blocks, 3 Columns, Teal-to-Indigo Gradient) -->
+                    <a href="/top_chaneel" class="sm:hidden bg-gradient-to-br from-teal-500 to-indigo-600 p-3 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center aspect-square transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-sm font-bold text-white text-center">{channel}</h3>
+                    </a>
+
+                    <!-- PC View (Unchanged: Rectangular Blocks, Teal-to-Indigo Gradient, "Explore more" Text) -->
+                    <a href="/top_chaneel" class="hidden sm:block bg-gradient-to-br from-teal-500 to-indigo-600 p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center aspect-w-1 aspect-h-1 transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-2 text-center">{channel}</h3>
+                        <p class="text-xs text-gray-200 text-center">Explore more</p>
+                    </a>
+                {:else}
+                    <!-- Mobile View (Quadratic Blocks, 3 Columns, Teal-to-Indigo Gradient) -->
+                    <div class="sm:hidden bg-gradient-to-br from-teal-500 to-indigo-600 p-3 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center aspect-square transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-sm font-bold text-white text-center">{channel}</h3>
+                    </div>
+
+                    <!-- PC View (Unchanged: Rectangular Blocks, Teal-to-Indigo Gradient, "Explore more" Text) -->
+                    <div class="hidden sm:block bg-gradient-to-br from-teal-500 to-indigo-600 p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center justify-center aspect-w-1 aspect-h-1 transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-2 text-center">{channel}</h3>
+                        <p class="text-xs text-gray-200 text-center">Explore more</p>
+                    </div>
+                {/if}
             {/each}
         </div>
     </div>
